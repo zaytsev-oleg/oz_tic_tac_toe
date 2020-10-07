@@ -1,0 +1,134 @@
+﻿@using krestiki_noliki;
+@model krestiki_noliki.Models.History
+
+@{
+    string key = string.Empty;
+    Layout = null;
+}
+
+@helper Transform(int item)
+{
+    if (item == -1)
+    {
+        @:X
+    }
+    else if (item == 1)
+    {
+        @:O
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>History | @ViewBag.Number</title>
+</head>
+<body>
+
+@if (Model.found)
+{    
+    <h1>Игра № @ViewBag.Number</h1>
+
+    <p>Карта игры:</p>
+
+    <table border ="1">
+
+    @for (int i = 0; i < Model.matrix.GetLength(0); i++)
+    {
+        <tr>
+            @for (int j = 0; j < Model.matrix.GetLength(0); j++)
+            {                
+                if (Model.game.WinX == 0 && Model.game.WinY == 0)
+                {
+                    if (i == j)
+                    {
+                        @:<td style="background-color: crimson">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else if (Model.game.WinX == 0 && Model.game.WinY == 2)
+                {
+                    if ((i + j) == 2)
+                    {
+                        @:<td style="background-color: azure">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else if (Model.game.WinX != -1 && Model.game.WinY == -1)
+                {
+                    if (i == Model.game.WinX)
+                    {
+                        @:<td style="background-color: orange">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else if (Model.game.WinX == -1 && Model.game.WinY != -1)
+                {
+                    if (j == Model.game.WinY)
+                    {
+                        @:<td style="background-color: bisque">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else
+                {
+                    @:<td>
+                }
+                                    
+                <div style="width: 80px; height: 80px; display: table; text-align: center;">
+                    <span style="display: table-cell; vertical-align: middle; font-size: xx-large">@Transform(Model.matrix[i,j])</span>
+                    @if (Model.trace[i, j] != 0)
+                    {
+                        <span style="display: table-cell; vertical-align: sub; font-size: small">@Model.trace[i,j]</span>
+                    }
+                </div>
+                
+                @:</td>
+            }
+        </tr>
+    }
+    </table>
+    
+    <p>Табличное представление:</p>
+    
+    <table border="1">
+        <tr>
+            <th>Номер хода</th>
+            <th>Строка</th>
+            <th>Столбец</th>
+        </tr>
+        
+        @foreach (var item in Model.moves)
+        {
+        <tr>
+            <td>@item.MoveId</td>
+            <td>@{ item.X++; } @item.X</td>
+            <td>@{ item.Y++; } @item.Y</td>
+        </tr>
+        }
+
+    </table>
+}
+else
+{
+    <p>Игра № @ViewBag.Number не найдена.</p>
+}
+
+<p><a href="javascript: window.close();">Закрыть окно</a></p>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+﻿@using krestiki_noliki;
+@model krestiki_noliki.Models.Summary
+
+@{
+    Layout = null;
+}
+
+@helper Transform(int item)
+{
+    if (item == -1)
+    {
+        @:x
+    }
+    else if (item == 1)
+    {
+        @:o
+    }
+    else if (item == 0)
+    {
+        @:-
+    }
+}
+
+@helper Count(int Key){
+    
+    int count = 0;
+    
+    if (Model.gameSummary.ContainsKey(Key))
+    {
+        count = Model.gameSummary[Key];
+    }
+    
+    @count
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Statistics</title>
+</head>
+<body>
+    <h1>Cтатистика</h1>
+     @{
+         int n = Model.gameData.Count();
+     }
+     
+     <ul>
+         <li>Сыграно игр: @n</li>
+         @if (n > 0)
+         {
+            <li>Период: с @Model.gameData[0].Date.ToShortDateString() по @Model.gameData[n-1].Date.ToShortDateString()</li>
+         }
+         
+         <li>Крестики (пользователь). Количество побед: @Count(-1)</li>
+         
+         <li>Нолики (компьютер). Количество побед: @Count(1)</li>
+         
+         <li>Количество мировых (ничейныйх) партий: @Count(0)</li>
+    </ul>
+
+    <table border ="1">
+        <tr>
+            <th>Номер</th>
+            <th>Первый ход</th>
+            <th>Количество ходов</th>
+            <th>Победитель</th>
+            <th>Дата и время (UTC'1)</th>
+            <th>Ход игры</th>
+        </tr>
+        
+        <tbody>
+        @foreach(var item in Model.gameData)
+        {
+            <tr>
+                <td>@item.Num</td>
+                <td>@Transform(item.FirstMove)</td>
+                <td>@item.CountMoves</td>
+                <td>@Transform(item.Winner)</td>
+                <td>@item.Date</td>
+                <td><a href="/Home/History/@item.Num" target="_blank">-->></a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+<p><small>'1 UTC - Coordinated Universal Time</small></p>
+<p><a href="/Home/Index">Назад к игре</a> | <a href="/Home/Restart">Новая игра</a> | <a href="/Home/CleanDB">Сбросить статистику</a></p>
+
+</body>
+</html>

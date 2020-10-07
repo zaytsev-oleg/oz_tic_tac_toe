@@ -1,0 +1,164 @@
+﻿@model krestiki_noliki.Models.Game
+
+@{
+    Layout = null;
+    
+    string title = "Крестики-нолики";
+}
+
+@helper Transform(int item)
+{
+    if (item == -1)
+    {
+        @:X
+    }
+    else if (item == 1)
+    {
+        @:O
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+
+<center>
+
+<h1>
+@{
+
+    Random rnd = new Random();
+    int r, g, b;
+    string color;
+    
+    foreach(char s in title)
+    {   
+        r = rnd.Next(0, 256);
+        g = rnd.Next(0, 256);
+        b = rnd.Next(0, 256);
+    
+        color = '#' + r.ToString("X") + g.ToString("X") + b.ToString("X");
+        
+        <span style="color:@color">@s</span>
+    }
+}
+
+</h1>
+
+<!--
+<br />
+@DateTime.UtcNow.ToLongTimeString()
+<br />
+
+@ViewBag.Row @ViewBag.Col <br />
+@ViewBag.SessionId <br />
+@ViewBag.IsNewSession <br />
+-->
+
+<table border ="1">
+
+    @for (int i = 0; i < Model.matrix.GetLength(0); i++)
+    {
+        <tr>
+            @for (int j = 0; j < Model.matrix.GetLength(0); j++)
+            {
+                if (Model.winX == 0 && Model.winY == 0)
+                {
+                    if (i == j)
+                    {
+                        @:<td style="background-color: crimson">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else if (Model.winX == 0 && Model.winY == 2)
+                {
+                    if ((i + j) == 2)
+                    {
+                        @:<td style="background-color: azure">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else if (Model.winX != -1 && Model.winY == -1)
+                {
+                    if (i == Model.winX)
+                    {
+                        @:<td style="background-color: orange">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else if (Model.winX == -1 && Model.winY != -1)
+                {
+                    if (j == Model.winY)
+                    {
+                        @:<td style="background-color: bisque">
+                    }
+                    else
+                    {
+                        @:<td>
+                    }
+                }
+                else
+                {
+                    @:<td>
+                }
+                                    
+                    if (Model.matrix[i, j] != 0)
+                    {
+                        <div style="width: 80px; height: 80px; display: table; text-align: center;">
+                            <span style="display: table-cell; vertical-align:middle; font-size: xx-large;">@Transform(Model.matrix[i,j])</span>
+                        </div>
+                    }
+                    else if (Model.matrix[i, j] == 0 && Model.status)
+                    {
+                        <div style="width: 80px; height: 80px" onclick="location.href='/Home/Index/@i/@j'"></div>
+                    }
+
+                @:</td>
+            }
+        </tr>
+    }
+</table>
+
+<!-- <p>@ViewBag.Strategy</p> -->
+
+@if (!Model.status)
+{
+    if (Model.winner == -1)
+    {
+        <p style="color:green">Ваш результат: Вы одержали победу.</p> 
+    }
+    else if (Model.winner == 1)
+    { 
+        <p style="color:red">Ваш результат: Вы потерпели поражение.</p>
+    }
+    else
+    { 
+        <p style="color:orange">Ваш результат: Мировая.</p>
+    }
+
+    if (Model.saved)
+    {
+        <!--<p>Игра сохранена в базе данных под порядковым номером @ViewBag.RecordId.</p>-->
+    }
+            
+    <p><!--<a href="/Home/Statistics">Посмотреть статистику</a> | --><a href="/Home/Restart">Новая игра</a></p>
+}
+
+</center>
+
+</body>
+</html>

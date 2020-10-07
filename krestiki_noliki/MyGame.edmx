@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GameDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="GameDBModelStoreContainer">
+          <EntitySet Name="Games" EntityType="GameDBModel.Store.Games" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Moves" EntityType="GameDBModel.Store.Moves" store:Type="Tables" store:Schema="dbo" store:Name="Moves">
+            <DefiningQuery>SELECT 
+      [Moves].[Id] AS [Id], 
+      [Moves].[MoveId] AS [MoveId], 
+      [Moves].[Move] AS [Move]
+      FROM [dbo].[Moves] AS [Moves]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__Moves__Id__22AA2996" Association="GameDBModel.Store.FK__Moves__Id__22AA2996">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="Moves" EntitySet="Moves" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Games">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FirstMove" Type="int" Nullable="false" />
+          <Property Name="Winner" Type="int" Nullable="false" />
+          <Property Name="WinX" Type="int" Nullable="false" />
+          <Property Name="WinY" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'C:\USERS\OLEG ZAYTSEV\DOCUMENTS\VISUAL STUDIO 2012\PROJECTS\KRESTIKI_NOLIKI\KRESTIKI_NOLIKI\APP_DATA\GAMEDB.MDF.dbo.Moves' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="Moves">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="MoveId" />
+            <PropertyRef Name="Move" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="MoveId" Type="int" Nullable="false" />
+          <Property Name="Move" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Moves__Id__22AA2996">
+          <End Role="Games" Type="GameDBModel.Store.Games" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Moves" Type="GameDBModel.Store.Moves" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Moves">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GameDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="GameDBEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Games" EntityType="GameDBModel.Games" />
+          <EntitySet Name="Moves" EntityType="GameDBModel.Moves" />
+          <AssociationSet Name="FK__Moves__Id__22AA2996" Association="GameDBModel.FK__Moves__Id__22AA2996">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="Moves" EntitySet="Moves" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Games">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstMove" Type="Int32" Nullable="false" />
+          <Property Name="Winner" Type="Int32" Nullable="false" />
+          <Property Name="WinX" Type="Int32" Nullable="false" />
+          <Property Name="WinY" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Moves" Relationship="GameDBModel.FK__Moves__Id__22AA2996" FromRole="Games" ToRole="Moves" />
+        </EntityType>
+        <EntityType Name="Moves">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="MoveId" />
+            <PropertyRef Name="Move" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="MoveId" Type="Int32" Nullable="false" />
+          <Property Name="Move" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Games" Relationship="GameDBModel.FK__Moves__Id__22AA2996" FromRole="Moves" ToRole="Games" />
+        </EntityType>
+        <Association Name="FK__Moves__Id__22AA2996">
+          <End Role="Games" Type="GameDBModel.Games" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Moves" Type="GameDBModel.Moves" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Moves">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GameDBModelStoreContainer" CdmEntityContainer="GameDBEntities">
+          <EntitySetMapping Name="Games">
+            <EntityTypeMapping TypeName="GameDBModel.Games">
+              <MappingFragment StoreEntitySet="Games">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstMove" ColumnName="FirstMove" />
+                <ScalarProperty Name="Winner" ColumnName="Winner" />
+                <ScalarProperty Name="WinX" ColumnName="WinX" />
+                <ScalarProperty Name="WinY" ColumnName="WinY" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Moves">
+            <EntityTypeMapping TypeName="GameDBModel.Moves">
+              <MappingFragment StoreEntitySet="Moves">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MoveId" ColumnName="MoveId" />
+                <ScalarProperty Name="Move" ColumnName="Move" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
